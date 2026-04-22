@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-IN" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#309BD3">
+
+<title>Page not found — Kinsu Health</title>
+<meta name="description" content="This page isn't in the vault yet. Head back home to Kinsu Health.">
+<meta name="robots" content="noindex,follow">
+
+<link rel="icon" type="image/png" href="/public/kinsu_logo.png">
+<link rel="apple-touch-icon" href="/public/kinsu_logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: { ink: '#0E1F2B', 'ink-soft': '#42566A', muted: '#7A8A99', paper: '#FAF7F0', 'paper-alt': '#F1ECE0', surface: '#FFFFFF', line: '#E4DED0', kinsu: { DEFAULT: '#309BD3', ink: '#1F6FA0', mist: '#E6F2FA' } },
+      fontFamily: { heading: ['Lexend', 'system-ui', 'sans-serif'], body: ['Inter', 'system-ui', 'sans-serif'] },
+      maxWidth: { container: '1120px' },
+    }}
+  }
+</script>
+
+<style>
+  :root { --ink: #0E1F2B; --ink-soft: #42566A; --paper: #FAF7F0; --kinsu-blue: #309BD3; --kinsu-blue-ink: #1F6FA0; --line: #E4DED0; }
+  body { background: var(--paper); color: var(--ink); font-family: 'Inter', system-ui, sans-serif; font-size: 17px; line-height: 1.65; -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+  h1, h2 { font-family: 'Lexend', system-ui, sans-serif; letter-spacing: -0.02em; }
+  .btn-primary { background: var(--kinsu-blue); color: #fff; padding: 0.75rem 1.5rem; border-radius: 10px; font-weight: 600; text-decoration: none; display: inline-block; transition: background 0.15s; }
+  .btn-primary:hover { background: var(--kinsu-blue-ink); }
+  .btn-secondary { color: var(--ink); padding: 0.75rem 1.25rem; border-radius: 10px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--kinsu-blue); outline-offset: 3px; border-radius: 4px; }
+</style>
+</head>
+<body class="font-body text-ink">
+
+<header class="border-b border-line bg-paper">
+  <div class="max-w-container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 font-heading font-bold text-lg text-ink" aria-label="Kinsu Health — home">
+      <img src="/public/kinsu_logo.png" alt="" width="32" height="32" class="w-8 h-8 rounded-md">
+      <span>Kinsu</span>
+    </a>
+    <a href="/" class="text-sm font-medium text-ink-soft hover:text-ink">← Back to home</a>
+  </div>
+</header>
+
+<main class="flex-1 flex items-center">
+  <div class="max-w-container mx-auto px-4 md:px-6 py-16 md:py-24 w-full">
+    <div class="max-w-xl">
+      <p class="text-sm text-kinsu-ink font-semibold uppercase tracking-wider mb-3" style="letter-spacing: 0.08em;">404</p>
+      <h1 class="font-heading font-bold text-[40px] md:text-[56px] leading-[1.05] text-ink mb-5">This page isn't in the vault yet.</h1>
+      <p class="text-lg text-ink-soft leading-relaxed mb-8">The link might be broken, or the page might have moved. Your records — when you have them — will always be exactly where you left them.</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <a href="/" class="btn-primary">Back to home</a>
+        <a href="/#waitlist" class="btn-secondary">Join the waitlist</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="bg-ink text-white/70 py-8">
+  <div class="max-w-container mx-auto px-4 md:px-6 text-sm flex flex-col md:flex-row justify-between gap-4">
+    <p>© 2026 Kinsu AI Labs · Made in India</p>
+    <nav class="flex gap-5" aria-label="Footer">
+      <a href="/" class="hover:text-white">Home</a>
+      <a href="/privacy" class="hover:text-white">Privacy</a>
+      <a href="/terms" class="hover:text-white">Terms</a>
+      <a href="mailto:dpo@kinsu.health" class="hover:text-white">DPO</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>

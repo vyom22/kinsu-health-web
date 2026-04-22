@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /waitlist-thanks
+
+Sitemap: https://kinsu.health/sitemap.xml
