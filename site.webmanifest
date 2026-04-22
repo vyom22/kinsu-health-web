@@ -1,0 +1,22 @@
+{
+  "name": "Kinsu Health",
+  "short_name": "Kinsu",
+  "description": "Your family's health vault — records, meds, vitals, all in one private app.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F0",
+  "theme_color": "#309BD3",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/public/kinsu_logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/public/kinsu_logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
