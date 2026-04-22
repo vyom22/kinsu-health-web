@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Claude Code local
+.claude/
+
+# Reference material dropped in working dir (not part of site)
+WhatsApp Image*.jpeg
+WhatsApp Image*.jpg
+*.tmp

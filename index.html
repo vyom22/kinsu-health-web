@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinsu — Your Intelligent Caregiver</title>
+<meta name="description" content="Track vitals. Manage medications. Own your health data. Kinsu is India's AI-powered health companion — sovereign, multilingual, DPDP compliant.">
+<meta name="keywords" content="Kinsu health app, Indian health AI, vitals tracker, medication reminder, DPDP compliant, sovereign AI India">
+<meta property="og:title" content="Kinsu — Your Intelligent Caregiver">
+<meta property="og:description" content="Track vitals. Manage medications. Own your health data — in your language, with AI that never leaves India.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kinsu.health">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="/public/kinsu_logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════════════ */
+:root {
+  --teal:         #0F9A96;
+  --teal-mid:     #0A7C78;
+  --teal-glow:    rgba(15,154,150,0.28);
+  --teal-soft:    rgba(15,154,150,0.10);
+  --teal-border:  rgba(15,154,150,0.22);
+  --yellow:       #F5DF40;
+  --yellow-soft:  rgba(245,223,64,0.12);
+  --cream:        #FAF6EE;
+
+  --bg-0:         #04080F;
+  --bg-1:         #050B14;
+  --surface:      rgba(255,255,255,0.04);
+  --surface-hi:   rgba(255,255,255,0.06);
+  --border:       rgba(255,255,255,0.08);
+  --border-hi:    rgba(255,255,255,0.13);
+  --text-muted:   rgba(255,255,255,0.50);
+  --text-faint:   rgba(255,255,255,0.30);
+  --white:        #FFFFFF;
+
+  /* hero compat */
+  --hero-bg:      #04080F;
+  --hero-surface: rgba(255,255,255,0.04);
+  --hero-border:  rgba(255,255,255,0.09);
+  --hero-text:    rgba(255,255,255,0.52);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg-0);color:var(--white);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg-0);}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:3px;}
+
+/* ═══════════════════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  height: 64px; padding: 0 5%;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(4,8,15,0.7);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.3s;
+}
+nav.scrolled { background: rgba(4,8,15,0.92); }
+
+.nav-logo {
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none;
+  font-size: 18px; font-weight: 700;
+  color: var(--white); letter-spacing: -0.4px;
+}
+.nav-logo svg { width: 28px; height: 28px; flex-shrink: 0; }
+
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-links a {
+  font-size: 13.5px; font-weight: 400; color: rgba(255,255,255,0.6);
+  text-decoration: none; letter-spacing: 0.1px;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-pill {
+  padding: 8px 18px; border-radius: 20px;
+  background: var(--teal); color: var(--white) !important;
+  font-weight: 500 !important; font-size: 13.5px !important;
+  transition: background 0.2s, transform 0.15s !important;
+}
+.nav-pill:hover { background: var(--teal-mid) !important; transform: translateY(-1px); }
+
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; background: none; border: none; padding: 4px;
+}
+.hamburger span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--white); border-radius: 2px; transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none; position: fixed; top: 64px; left: 0; right: 0;
+  background: rgba(4,8,15,0.97); backdrop-filter: blur(20px);
+  padding: 20px 5% 28px; z-index: 299;
+  flex-direction: column;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  color: rgba(255,255,255,0.6); font-size: 16px; font-weight: 400;
+  text-decoration: none; padding: 13px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: color 0.2s;
+}
+.mobile-menu a:hover { color: var(--white); }
+.mobile-menu .m-pill {
+  margin-top: 14px; padding: 13px 0; border-radius: 12px;
+  background: var(--teal); color: var(--white) !important;
+  font-weight: 500; text-align: center; border-bottom: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════════════════ */
+.hero {
+  min-height: 100svh;
+  background: var(--hero-bg);
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: stretch;
+  position: relative; overflow: hidden;
+  padding-top: 64px;
+}
+
+.hero-noise {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat; background-size: 200px 200px;
+  opacity: 0.5;
+}
+.hero-glow {
+  position: absolute; inset: 0; z-index: 1;
+  background:
+    radial-gradient(ellipse 55% 65% at 72% 52%, var(--teal-glow) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 40% at 20% 80%, rgba(245,223,64,0.06) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute; inset: 0; z-index: 2;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 75%);
+}
+
+.hero-inner {
+  position: relative; z-index: 10;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: 0;
+  max-width: 1280px; margin: 0 auto;
+  width: 100%; padding: 72px 5% 80px;
+}
+
+.hero-copy { max-width: 560px; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px 6px 10px; border-radius: 24px;
+  background: rgba(15,154,150,0.12);
+  border: 1px solid rgba(15,154,150,0.3);
+  font-size: 11.5px; font-weight: 500; color: rgba(255,255,255,0.75);
+  letter-spacing: 0.3px; text-transform: uppercase;
+  margin-bottom: 36px;
+}
+.badge-live {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15,154,150,0.25);
+  animation: livePulse 2.2s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%,100% { box-shadow: 0 0 0 3px rgba(15,154,150,0.25); }
+  50%      { box-shadow: 0 0 0 6px rgba(15,154,150,0.06); }
+}
+.badge-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.15); }
+
+.hero-headline {
+  font-size: clamp(48px, 6.2vw, 88px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -3.5px;
+  color: var(--white);
+  margin-bottom: 26px;
+}
+.hero-headline-em {
+  background: linear-gradient(135deg, var(--teal) 0%, #2DD4BF 60%, var(--yellow) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: clamp(16px, 1.5vw, 19px);
+  font-weight: 300; line-height: 1.65;
+  color: rgba(255,255,255,0.5);
+  max-width: 460px; margin-bottom: 44px;
+  letter-spacing: -0.1px;
+}
+
+.hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
+.cta-primary {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 14px 26px; border-radius: 50px;
+  background: var(--teal); color: var(--white);
+  font-size: 15px; font-weight: 500;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 0 0 0 rgba(15,154,150,0.4);
+  letter-spacing: -0.1px;
+}
+.cta-primary:hover {
+  background: var(--teal-mid);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(15,154,150,0.35);
+}
+.cta-primary svg { width: 16px; height: 16px; transition: transform 0.2s; }
+.cta-primary:hover svg { transform: translateX(3px); }
+
+.cta-ghost {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 14px 22px; border-radius: 50px;
+  background: transparent; color: rgba(255,255,255,0.7);
+  font-size: 15px; font-weight: 400;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  letter-spacing: -0.1px;
+}
+.cta-ghost:hover {
+  border-color: rgba(255,255,255,0.35);
+  color: var(--white);
+  background: rgba(255,255,255,0.04);
+}
+
+.hero-trust {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.trust-item { display: flex; flex-direction: column; gap: 2px; }
+.trust-num {
+  font-size: 22px; font-weight: 700; color: var(--white);
+  letter-spacing: -0.8px; line-height: 1;
+}
+.trust-lbl {
+  font-size: 11px; font-weight: 400;
+  color: rgba(255,255,255,0.38); letter-spacing: 0.2px;
+}
+.trust-sep { width: 1px; height: 32px; background: rgba(255,255,255,0.08); }
+
+.hero-device-scene {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  height: 640px;
+}
+
+.device-orb {
+  position: absolute;
+  width: 340px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, var(--teal-glow) 0%, transparent 70%);
+  filter: blur(40px);
+  animation: orbPulse 5s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes orbPulse {
+  0%,100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.08); }
+}
+
+.device {
+  position: relative; z-index: 10;
+  width: 268px; height: 536px;
+  border-radius: 48px;
+  background: #0C0C0E;
+  border: 8px solid #1C1C1E;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 48px 96px rgba(0,0,0,0.7),
+    0 16px 40px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow: hidden;
+  animation: deviceFloat 7s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+@keyframes deviceFloat {
+  0%,100% { transform: translateY(0px) rotate(0deg); }
+  30%      { transform: translateY(-10px) rotate(0.3deg); }
+  70%      { transform: translateY(-5px) rotate(-0.2deg); }
+}
+
+.device-island {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 88px; height: 28px; border-radius: 14px;
+  background: #0C0C0E; z-index: 20;
+}
+
+.app-screen {
+  width: 100%; height: 100%;
+  background: var(--cream);
+  overflow: hidden;
+}
+.app-status-bar {
+  height: 44px;
+  background: var(--cream);
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 0 20px 6px;
+}
+.app-status-time { font-size: 12px; font-weight: 600; color: #111; }
+.app-status-icons { font-size: 11px; color: #555; }
+
+.app-topbar {
+  padding: 10px 18px 12px;
+  background: var(--cream);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.app-greeting-sm { font-size: 10px; color: #888; font-weight: 400; }
+.app-name-big { font-size: 16px; font-weight: 700; color: #111; letter-spacing: -0.3px; }
+.app-streak-chip {
+  padding: 4px 9px; border-radius: 12px;
+  background: #FFF8DC; border: 1px solid #F0D830;
+  font-size: 10px; font-weight: 600; color: #7A6A00;
+}
+
+.app-ai-alert {
+  margin: 0 14px 10px;
+  padding: 10px 12px;
+  background: rgba(15,154,150,0.08);
+  border: 1px solid rgba(15,154,150,0.2);
+  border-radius: 12px;
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.app-ai-icon {
+  width: 20px; height: 20px; border-radius: 6px;
+  background: var(--teal); color: white;
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.app-ai-title { font-size: 9px; font-weight: 700; color: var(--teal); margin-bottom: 2px; }
+.app-ai-body { font-size: 9px; color: #555; line-height: 1.4; }
+
+.app-section-lbl {
+  padding: 0 16px 7px;
+  font-size: 10px; font-weight: 600; color: #888; letter-spacing: 0.5px; text-transform: uppercase;
+}
+.app-vitals-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  padding: 0 14px 10px;
+}
+.app-vital {
+  background: white; border-radius: 12px;
+  padding: 9px 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.app-vital-lbl { font-size: 8.5px; color: #999; margin-bottom: 2px; }
+.app-vital-num { font-size: 17px; font-weight: 700; color: #111; line-height: 1; letter-spacing: -0.5px; }
+.app-vital-num small { font-size: 8px; font-weight: 400; color: #999; }
+.app-vital-trend { font-size: 8px; font-weight: 500; margin-top: 2px; }
+.trend-up { color: #E8440A; }
+.trend-ok { color: #0AA068; }
+
+.app-med {
+  margin: 0 14px 6px; padding: 8px 10px;
+  background: white; border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.app-med-name { font-size: 9.5px; font-weight: 600; color: #111; }
+.app-med-time { font-size: 8.5px; color: #999; }
+.app-med-badge {
+  font-size: 8px; font-weight: 600;
+  padding: 2px 7px; border-radius: 6px;
+}
+.med-taken { background: rgba(10,160,104,0.1); color: #0AA068; }
+.med-missed { background: rgba(232,68,10,0.1); color: #E8440A; }
+
+/* Floating cards */
+.float-card {
+  position: absolute; z-index: 20;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px; padding: 14px 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(255,255,255,0.06) inset;
+}
+
+.fc-hr { top: 48px; left: -80px; width: 160px; animation: fcFloat1 6s ease-in-out infinite; }
+@keyframes fcFloat1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.fc-hr-header { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; }
+.fc-hr-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(255,70,70,0.15); border: 1px solid rgba(255,70,70,0.2);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.fc-hr-lbl { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 500; }
+.fc-hr-val { font-size: 26px; font-weight: 700; color: white; letter-spacing: -1px; line-height: 1; }
+.fc-hr-unit { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 400; }
+.fc-hr-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 6px; padding: 3px 8px; border-radius: 10px;
+  background: rgba(10,160,104,0.15); border: 1px solid rgba(10,160,104,0.2);
+  font-size: 9.5px; font-weight: 600; color: #2DD4BF;
+}
+.fc-hr-dot { width: 5px; height: 5px; border-radius: 50%; background: #2DD4BF; }
+
+.fc-ai-card { top: 30px; right: -90px; width: 188px; animation: fcFloat2 7s ease-in-out 1s infinite; }
+@keyframes fcFloat2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.fc-ai-header { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
+.fc-ai-chip {
+  padding: 3px 9px; border-radius: 10px;
+  background: rgba(245,223,64,0.15); border: 1px solid rgba(245,223,64,0.25);
+  font-size: 9px; font-weight: 600; color: var(--yellow); letter-spacing: 0.3px; text-transform: uppercase;
+}
+.fc-ai-text { font-size: 11.5px; color: rgba(255,255,255,0.7); line-height: 1.5; font-weight: 300; }
+.fc-ai-tag { margin-top: 9px; font-size: 10px; color: var(--teal); font-weight: 500; }
+
+.fc-med-card { bottom: 100px; left: -70px; width: 172px; animation: fcFloat3 8s ease-in-out 2s infinite; }
+@keyframes fcFloat3 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.fc-med-row { display: flex; justify-content: space-between; align-items: center; }
+.fc-med-name { font-size: 11px; font-weight: 600; color: white; margin-bottom: 3px; }
+.fc-med-time { font-size: 10px; color: rgba(255,255,255,0.4); }
+.fc-taken-badge {
+  padding: 3px 8px; border-radius: 8px;
+  background: rgba(10,160,104,0.15); border: 1px solid rgba(10,160,104,0.2);
+  font-size: 9px; font-weight: 600; color: #2DD4BF;
+}
+
+.fc-streak {
+  bottom: 80px; right: -64px; width: 130px; text-align: center;
+  padding: 16px 14px;
+  animation: fcFloat4 6.5s ease-in-out 0.5s infinite;
+}
+@keyframes fcFloat4 { 0%,100% { transform: translateY(0) rotate(1deg); } 50% { transform: translateY(-9px) rotate(-0.5deg); } }
+.fc-streak-num { font-size: 32px; font-weight: 800; color: white; letter-spacing: -1px; line-height: 1; }
+.fc-streak-sub { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+.hero-scroll {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  z-index: 10;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  animation: fadeUpIn 1s 1.5s both;
+}
+@keyframes fadeUpIn { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+.scroll-mouse {
+  width: 22px; height: 34px; border-radius: 12px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  display: flex; justify-content: center; padding-top: 5px;
+}
+.scroll-wheel {
+  width: 3px; height: 6px; border-radius: 2px;
+  background: rgba(255,255,255,0.35);
+  animation: scrollWheel 2s ease-in-out infinite;
+}
+@keyframes scrollWheel {
+  0%   { transform: translateY(0); opacity: 1; }
+  80%  { transform: translateY(10px); opacity: 0; }
+  81%  { transform: translateY(0); opacity: 0; }
+  100% { opacity: 1; }
+}
+.scroll-label { font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 1px; text-transform: uppercase; }
+
+.hero-copy { animation: heroLeft 0.9s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+.hero-device-scene { animation: heroRight 0.9s cubic-bezier(0.16,1,0.3,1) 0.25s both; }
+@keyframes heroLeft { from { opacity:0; transform: translateX(-24px); } to { opacity:1; transform: none; } }
+@keyframes heroRight { from { opacity:0; transform: translateX(24px); } to { opacity:1; transform: none; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SECTION COMMONS
+═══════════════════════════════════════════════════════════════════ */
+section { padding: 100px 5%; }
+
+.section-tag {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--teal); font-weight: 600; margin-bottom: 16px;
+  display: block;
+}
+.section-title {
+  font-size: clamp(30px, 4vw, 54px);
+  font-weight: 800; line-height: 1.08;
+  letter-spacing: -2px; color: var(--white);
+  margin-bottom: 20px;
+}
+.section-title em {
+  background: linear-gradient(135deg, var(--teal) 0%, #2DD4BF 60%, var(--yellow) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; font-style: normal;
+}
+.section-sub {
+  font-size: 17px; color: var(--text-muted); font-weight: 300;
+  line-height: 1.65; max-width: 600px; margin-bottom: 64px;
+}
+.divider { width: 40px; height: 2px; background: var(--teal); margin-bottom: 24px; border-radius: 1px; }
+
+.btn-primary {
+  padding: 14px 30px; border-radius: 50px;
+  background: var(--teal); color: var(--white);
+  font-size: 15px; font-weight: 500; text-decoration: none; border: none;
+  cursor: pointer; transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  display: inline-block; letter-spacing: -0.1px;
+}
+.btn-primary:hover { background: var(--teal-mid); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(15,154,150,0.3); }
+.btn-secondary {
+  padding: 14px 30px; border-radius: 50px;
+  background: transparent; color: rgba(255,255,255,0.65);
+  font-size: 15px; font-weight: 400; text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer; transition: border-color 0.2s, color 0.2s;
+  display: inline-block;
+}
+.btn-secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+/* Glass card base */
+.g-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  transition: background 0.25s, border-color 0.25s;
+}
+.g-card:hover { background: var(--surface-hi); border-color: var(--border-hi); }
+
+/* Fade-up scroll animation */
+.fade-up { opacity:0; transform:translateY(28px); transition:opacity 0.65s ease, transform 0.65s ease; }
+.fade-up.visible { opacity:1; transform:none; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROBLEM
+═══════════════════════════════════════════════════════════════════ */
+.problem { background: var(--bg-1); }
+.problem-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+.problem-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  padding: 44px 36px;
+  position: relative; overflow: hidden;
+  transition: background 0.25s, border-color 0.25s;
+}
+.problem-card:first-child { border-radius: 20px 0 0 20px; }
+.problem-card:last-child  { border-radius: 0 20px 20px 0; }
+.problem-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--teal), #2DD4BF);
+  transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+}
+.problem-card:hover::before { transform: scaleX(1); }
+.problem-card:hover { background: rgba(255,255,255,0.05); border-color: var(--teal-border); }
+.problem-num {
+  font-size: 60px; font-weight: 800; line-height: 1;
+  letter-spacing: -3px; margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--teal), rgba(15,154,150,0.15));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.problem-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 14px; letter-spacing: -0.3px; }
+.problem-card p { font-size: 14px; color: var(--text-muted); line-height: 1.75; font-weight: 300; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   QUOTE BAND
+═══════════════════════════════════════════════════════════════════ */
+.quote-band {
+  padding: 80px 5%; text-align: center;
+  background: var(--bg-0);
+  position: relative; overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.quote-band::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(15,154,150,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.quote-band blockquote {
+  position: relative; z-index: 1;
+  font-size: clamp(22px, 3vw, 44px);
+  font-weight: 700; color: var(--white);
+  line-height: 1.18; letter-spacing: -1.5px;
+  max-width: 820px; margin: 0 auto;
+}
+.quote-band blockquote::before {
+  content: '\201C';
+  position: absolute; top: -20px; left: -20px;
+  font-size: 100px; line-height: 1;
+  color: var(--teal); opacity: 0.25;
+  font-weight: 900; pointer-events: none;
+}
+.quote-band cite {
+  display: block; margin-top: 20px;
+  font-size: 13px; font-style: normal;
+  color: var(--teal); font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SPARROW
+═══════════════════════════════════════════════════════════════════ */
+.sparrow { background: var(--bg-0); }
+.sparrow-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.sparrow-badges { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 40px; }
+.badge {
+  padding: 6px 14px; border-radius: 20px;
+  background: var(--teal-soft); border: 1px solid var(--teal-border);
+  font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 400;
+}
+.sparrow-metrics { display: flex; flex-direction: column; }
+.metric-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+}
+.metric-row:first-child { border-top: 1px solid var(--border); }
+.metric-label { font-size: 14px; color: var(--text-muted); font-weight: 300; }
+.metric-val { font-size: 14px; font-weight: 500; color: var(--white); }
+.metric-val.teal { color: var(--teal); }
+
+.benchmark-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px; padding: 36px;
+}
+.benchmark-card h4 {
+  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 28px; font-weight: 500;
+}
+.bench-row { margin-bottom: 18px; }
+.bench-row-label {
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: var(--text-muted); margin-bottom: 7px;
+}
+.bench-row-label span:last-child { color: var(--white); font-weight: 500; }
+.bench-row-label span.accent { color: var(--teal); font-weight: 600; }
+.bar-track { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-teal { background: linear-gradient(90deg, var(--teal), #2DD4BF); }
+.bar-dim  { background: rgba(255,255,255,0.15); }
+
+.score-big {
+  text-align: center; padding: 28px;
+  background: var(--teal-soft);
+  border: 1px solid var(--teal-border);
+  border-radius: 16px; margin-top: 24px;
+}
+.score-num {
+  font-size: 56px; font-weight: 800; letter-spacing: -3px; line-height: 1;
+  background: linear-gradient(135deg, var(--teal) 0%, #2DD4BF 60%, var(--yellow) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.score-label { font-size: 12px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+.score-sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.score-sub-cell {
+  background: rgba(255,255,255,0.04); border-radius: 12px;
+  padding: 14px; text-align: center;
+}
+.score-sub-val { font-size: 22px; font-weight: 700; color: var(--white); letter-spacing: -0.5px; }
+.score-sub-val small { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+.score-sub-lbl { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   APP SECTION
+═══════════════════════════════════════════════════════════════════ */
+.app-section { background: var(--bg-1); }
+.app-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+
+/* App phones — match hero phone style */
+.app-phones { position: relative; height: 500px; }
+.phone-wrap {
+  position: absolute;
+  border-radius: 40px;
+  background: #0C0C0E;
+  border: 7px solid #1C1C1E;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 40px 80px rgba(0,0,0,0.65),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+.phone-wrap.main { top: 0; left: 0; z-index: 2; width: 230px; height: 460px; border-radius: 44px; }
+.phone-wrap.back { top: 50px; left: 170px; z-index: 1; width: 210px; height: 420px; border-radius: 40px; opacity: 0.65; }
+.phone-wrap .phone-island {
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 24px; border-radius: 12px;
+  background: #0C0C0E; z-index: 5;
+}
+.phone-wrap .phone-screen { width: 100%; height: 100%; background: var(--cream); overflow: hidden; }
+
+/* App screen content inside phone */
+.psc-bar { height: 40px; background: var(--cream); display: flex; align-items: flex-end; justify-content: space-between; padding: 0 16px 6px; }
+.psc-time { font-size: 11px; font-weight: 600; color: #111; }
+.psc-icons { font-size: 10px; color: #555; }
+.psc-top { padding: 8px 14px 10px; display: flex; justify-content: space-between; align-items: center; }
+.psc-greeting { font-size: 9px; color: #888; }
+.psc-name { font-size: 14px; font-weight: 700; color: #111; letter-spacing: -0.3px; }
+.psc-streak { padding: 3px 8px; border-radius: 10px; background: #FFF8DC; border: 1px solid #F0D830; font-size: 9px; font-weight: 600; color: #7A6A00; }
+.psc-alert { margin: 0 12px 8px; padding: 8px 10px; background: rgba(15,154,150,0.08); border: 1px solid rgba(15,154,150,0.2); border-radius: 10px; display: flex; gap: 7px; }
+.psc-alert-icon { width: 18px; height: 18px; border-radius: 5px; background: var(--teal); color: white; font-size: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.psc-alert-title { font-size: 8px; font-weight: 700; color: var(--teal); margin-bottom: 2px; }
+.psc-alert-body { font-size: 8px; color: #555; line-height: 1.4; }
+.psc-lbl { padding: 0 14px 6px; font-size: 9px; font-weight: 600; color: #888; letter-spacing: 0.5px; text-transform: uppercase; }
+.psc-vitals { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 0 12px 8px; }
+.psc-vital { background: white; border-radius: 10px; padding: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.psc-vital-lbl { font-size: 7.5px; color: #999; margin-bottom: 2px; }
+.psc-vital-num { font-size: 15px; font-weight: 700; color: #111; line-height: 1; letter-spacing: -0.4px; }
+.psc-vital-num small { font-size: 7px; color: #999; font-weight: 400; }
+.psc-vital-trend { font-size: 7px; font-weight: 500; margin-top: 2px; }
+.psc-med { margin: 0 12px 5px; padding: 7px 9px; background: white; border-radius: 9px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+.psc-med-name { font-size: 8.5px; font-weight: 600; color: #111; }
+.psc-med-time { font-size: 7.5px; color: #999; }
+.psc-med-badge { font-size: 7px; font-weight: 600; padding: 2px 6px; border-radius: 5px; }
+
+/* Back phone: trends */
+.psc-chart-wrap { padding: 12px; }
+.psc-chart-title { font-size: 11px; font-weight: 600; color: #111; margin-bottom: 10px; letter-spacing: -0.2px; }
+.psc-chart-card { background: white; border-radius: 12px; padding: 12px; margin-bottom: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.psc-chart-lbl { font-size: 8.5px; color: #999; margin-bottom: 4px; }
+.psc-chart-val { font-size: 18px; font-weight: 700; color: #111; letter-spacing: -0.5px; }
+.psc-chart-sub { font-size: 8px; color: #0AA068; font-weight: 500; margin-top: 2px; }
+.psc-trend-wrap { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.psc-trend-lbl { font-size: 8.5px; color: #999; margin-bottom: 8px; }
+
+/* App features list */
+.app-features { display: flex; flex-direction: column; gap: 26px; }
+.app-feature { display: flex; gap: 18px; align-items: flex-start; }
+.app-feature-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: var(--teal-soft); border: 1px solid var(--teal-border);
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.app-feature h4 { font-size: 15px; font-weight: 600; margin-bottom: 5px; letter-spacing: -0.2px; }
+.app-feature p { font-size: 14px; color: var(--text-muted); line-height: 1.65; font-weight: 300; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESEARCH JOURNEY
+═══════════════════════════════════════════════════════════════════ */
+.journey { background: var(--bg-0); }
+.timeline { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; }
+.timeline::before {
+  content: ''; position: absolute; top: 24px; left: 12.5%; right: 12.5%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  opacity: 0.4;
+}
+.timeline-step { text-align: center; padding: 0 20px; }
+.tl-num {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--teal-soft); border: 1px solid var(--teal-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: var(--teal);
+  margin: 0 auto 24px; position: relative; z-index: 1;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.timeline-step:hover .tl-num {
+  background: rgba(15,154,150,0.2);
+  box-shadow: 0 0 0 4px rgba(15,154,150,0.1);
+}
+.tl-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; letter-spacing: -0.2px; }
+.tl-body { font-size: 13px; color: var(--text-muted); line-height: 1.7; font-weight: 300; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   WHY NOW
+═══════════════════════════════════════════════════════════════════ */
+.why-now { background: var(--bg-1); }
+.why-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 2px; }
+.why-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  padding: 52px 48px;
+  transition: background 0.25s;
+}
+.why-card:first-child { border-radius: 20px 0 0 20px; }
+.why-card:last-child  { border-radius: 0 20px 20px 0; }
+.why-card:hover { background: rgba(255,255,255,0.05); }
+.why-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px; }
+.why-card p { font-size: 15px; color: var(--text-muted); line-height: 1.85; font-weight: 300; margin-bottom: 16px; }
+.why-card strong { color: var(--white); font-weight: 500; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   TEAM
+═══════════════════════════════════════════════════════════════════ */
+.team { background: var(--bg-0); }
+.team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+.team-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  padding: 44px 36px;
+  transition: background 0.25s, border-color 0.25s;
+}
+.team-card:first-child { border-radius: 20px 0 0 20px; }
+.team-card:last-child  { border-radius: 0 20px 20px 0; }
+.team-card:hover { background: rgba(255,255,255,0.05); border-color: var(--teal-border); }
+.team-avatar {
+  width: 56px; height: 56px; border-radius: 14px;
+  background: var(--teal); border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; color: white;
+  margin-bottom: 22px; letter-spacing: -0.5px;
+}
+.team-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px; }
+.team-role {
+  font-size: 11px; color: var(--teal); letter-spacing: 1px;
+  text-transform: uppercase; font-weight: 600; margin-bottom: 16px;
+}
+.team-bio { font-size: 14px; color: var(--text-muted); line-height: 1.75; font-weight: 300; margin-bottom: 20px; }
+.team-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.team-tag {
+  font-size: 11px; color: rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 6px; padding: 3px 9px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MARKET
+═══════════════════════════════════════════════════════════════════ */
+.market { background: var(--bg-1); }
+.market-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
+.market-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  padding: 44px 28px;
+  transition: background 0.25s, border-color 0.25s;
+}
+.market-card:first-child { border-radius: 20px 0 0 20px; }
+.market-card:last-child  { border-radius: 0 20px 20px 0; }
+.market-card:hover { background: rgba(255,255,255,0.05); border-color: var(--teal-border); }
+.market-num {
+  font-size: 42px; font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--white) 0%, var(--teal) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.market-label { font-size: 14px; font-weight: 600; margin-bottom: 8px; letter-spacing: -0.2px; }
+.market-sub { font-size: 13px; color: var(--text-muted); font-weight: 300; line-height: 1.55; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════════════════════════════ */
+.contact-section { background: var(--bg-0); padding: 100px 5%; }
+.contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+
+.contact-info { display: flex; flex-direction: column; gap: 40px; }
+.contact-info-header h2 {
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 16px;
+}
+.contact-info-header h2 em {
+  background: linear-gradient(135deg, var(--teal) 0%, #2DD4BF 60%, var(--yellow) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  font-style: normal;
+}
+.contact-info-header p { font-size: 16px; color: var(--text-muted); font-weight: 300; line-height: 1.7; }
+
+.contact-cards { display: flex; flex-direction: column; gap: 10px; }
+.contact-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 22px;
+  display: flex; align-items: center; gap: 16px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.contact-card:hover { background: var(--surface-hi); border-color: var(--teal-border); }
+.contact-card-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--teal-soft); border: 1px solid var(--teal-border);
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.contact-card-label { font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); font-weight: 500; margin-bottom: 3px; }
+.contact-card-val { font-size: 14px; font-weight: 400; color: var(--white); }
+.contact-card-val a { color: var(--teal); text-decoration: none; }
+.contact-card-val a:hover { text-decoration: underline; }
+
+.partner-types-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: 14px; }
+.partner-types { display: flex; flex-direction: column; gap: 8px; }
+.partner-type {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border); background: rgba(255,255,255,0.02);
+  font-size: 14px; font-weight: 400; color: var(--text-muted);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.partner-type:hover { background: var(--teal-soft); border-color: var(--teal-border); color: var(--white); }
+.partner-type-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+.contact-form {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 24px; padding: 40px;
+}
+.contact-form h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+.contact-form p { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; font-weight: 300; }
+.form-row { margin-bottom: 20px; }
+.form-row label {
+  display: block; font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 500; margin-bottom: 8px;
+}
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 16px;
+  color: var(--white); font-family: 'Inter', sans-serif;
+  font-size: 14px; font-weight: 300;
+  transition: border-color 0.2s, background 0.2s; outline: none;
+}
+.form-row input::placeholder,
+.form-row textarea::placeholder { color: rgba(255,255,255,0.25); }
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus { border-color: var(--teal); background: rgba(15,154,150,0.04); }
+.form-row select { appearance: none; cursor: pointer; }
+.form-row select option { background: #0A1220; color: var(--white); }
+.form-row textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
+.form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-submit {
+  width: 100%; padding: 14px; border-radius: 50px;
+  background: var(--teal); color: white;
+  font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500;
+  border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  margin-top: 8px; letter-spacing: -0.1px;
+}
+.form-submit:hover { background: var(--teal-mid); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(15,154,150,0.3); }
+.form-note { font-size: 12px; color: var(--text-faint); text-align: center; margin-top: 14px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════════════ */
+footer {
+  background: #02050B; padding: 36px 5%;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-logo { font-size: 16px; font-weight: 700; color: var(--white); letter-spacing: -0.3px; }
+.footer-logo span { color: var(--teal); }
+.footer-links { display: flex; gap: 28px; }
+.footer-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-copy { font-size: 12px; color: var(--text-faint); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════════ */
+@media(max-width:1100px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 64px; }
+  .hero-copy { max-width: 100%; }
+  .hero-device-scene { height: 520px; }
+  .fc-hr { left: -40px; }
+  .fc-ai-card { right: -40px; }
+  .fc-med-card { left: -30px; }
+  .fc-streak { right: -30px; }
+  .sparrow-layout { gap: 56px; }
+  .app-layout { gap: 56px; }
+}
+@media(max-width:900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .hero-inner { padding: 40px 5% 60px; }
+  .hero-device-scene { height: 460px; }
+  .device { width: 220px; height: 440px; border-radius: 38px; }
+  .fc-hr { top: 20px; left: -20px; width: 130px; padding: 10px 12px; }
+  .fc-ai-card { top: 10px; right: -20px; width: 140px; padding: 10px 12px; }
+  .fc-med-card { bottom: 80px; left: -10px; width: 140px; padding: 10px 12px; }
+  .fc-streak { bottom: 60px; right: -10px; width: 110px; }
+  .sparrow-layout,
+  .app-layout,
+  .contact-layout { grid-template-columns: 1fr; }
+  .problem-grid,
+  .team-grid,
+  .market-grid,
+  .why-grid { grid-template-columns: 1fr; }
+  .problem-card:first-child,
+  .why-card:first-child,
+  .team-card:first-child,
+  .market-card:first-child { border-radius: 20px 20px 0 0; }
+  .problem-card:last-child,
+  .why-card:last-child,
+  .team-card:last-child,
+  .market-card:last-child { border-radius: 0 0 20px 20px; }
+  .problem-card, .why-card, .team-card, .market-card { border-radius: 0; }
+  .timeline { grid-template-columns: 1fr 1fr; }
+  .timeline::before { display: none; }
+  .app-phones { height: 350px; }
+  section { padding: 72px 5%; }
+  .form-2col { grid-template-columns: 1fr; }
+}
+@media(max-width:480px) {
+  .hero-headline { letter-spacing: -2.5px; }
+  .hero-actions { flex-direction: column; }
+  .hero-actions a { text-align: center; width: 100%; justify-content: center; }
+  .contact-form { padding: 24px; }
+  .hero-device-scene { display: none; }
+  .why-card { padding: 36px 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════════════════════ -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="var(--teal)">
+      <g transform="translate(16,16)">
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(0)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(51.43)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(102.86)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(154.29)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(205.71)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(257.14)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(308.57)"/>
+      </g>
+    </svg>
+    Kinsu
+  </a>
+  <div class="nav-links">
+    <a href="#app">Health App</a>
+    <a href="#sparrow">Sparrow AI</a>
+    <a href="#research">Research</a>
+    <a href="#team">Team</a>
+    <a href="#contact" class="nav-pill">Partner with us</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#app" onclick="closeMenu()">Health App</a>
+  <a href="#sparrow" onclick="closeMenu()">Sparrow AI</a>
+  <a href="#research" onclick="closeMenu()">Research</a>
+  <a href="#team" onclick="closeMenu()">Team</a>
+  <a href="#contact" class="m-pill" onclick="closeMenu()">Partner with us</a>
+</div>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-noise"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-badge">
+        <span class="badge-live"></span>
+        <span class="badge-sep"></span>
+        AI-Powered &nbsp;·&nbsp; DPDP Compliant &nbsp;·&nbsp; Made in India
+      </div>
+
+      <h1 class="hero-headline">
+        Your intelligent<br>
+        <span class="hero-headline-em">caregiver.</span>
+      </h1>
+
+      <p class="hero-sub">
+        Track vitals. Manage medications. Understand your body — in your language, with sovereign AI that never leaves India.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#app" class="cta-primary">
+          Get the App
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#sparrow" class="cta-ghost">Explore Sparrow AI →</a>
+      </div>
+
+      <div class="hero-trust">
+        <div class="trust-item">
+          <div class="trust-num">DPDP</div>
+          <div class="trust-lbl">Act 2023 Compliant</div>
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <div class="trust-num">5</div>
+          <div class="trust-lbl">Indian Languages</div>
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <div class="trust-num">O(1)</div>
+          <div class="trust-lbl">Memory AI Model</div>
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <div class="trust-num">89.9</div>
+          <div class="trust-lbl">Clinical Score /100</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-device-scene">
+      <div class="device-orb"></div>
+
+      <div class="float-card fc-hr">
+        <div class="fc-hr-header">
+          <div class="fc-hr-icon">❤️</div>
+          <div class="fc-hr-lbl">Heart Rate</div>
+        </div>
+        <div>
+          <span class="fc-hr-val">72</span>
+          <span class="fc-hr-unit"> bpm</span>
+        </div>
+        <div class="fc-hr-status">
+          <div class="fc-hr-dot"></div> Normal
+        </div>
+      </div>
+
+      <div class="float-card fc-ai-card">
+        <div class="fc-ai-header">
+          <div class="fc-ai-chip">✦ AI Insight</div>
+        </div>
+        <div class="fc-ai-text">Blood sugar trending up. Consider reducing refined carbs.</div>
+        <div class="fc-ai-tag">Powered by Sparrow →</div>
+      </div>
+
+      <div class="device">
+        <div class="device-island"></div>
+        <div class="app-screen">
+          <div class="app-status-bar">
+            <span class="app-status-time">9:41</span>
+            <span class="app-status-icons">● ● ▮</span>
+          </div>
+          <div class="app-topbar">
+            <div>
+              <div class="app-greeting-sm">Good morning</div>
+              <div class="app-name-big">Vyom ✨</div>
+            </div>
+            <div class="app-streak-chip">🔥 15</div>
+          </div>
+          <div class="app-ai-alert">
+            <div class="app-ai-icon">✦</div>
+            <div>
+              <div class="app-ai-title">AI Health Alert</div>
+              <div class="app-ai-body">Blood sugar above 140 mg/dL this week. Limit refined carbs.</div>
+            </div>
+          </div>
+          <div class="app-section-lbl">Vitals Today</div>
+          <div class="app-vitals-grid">
+            <div class="app-vital">
+              <div class="app-vital-lbl">Blood Sugar</div>
+              <div class="app-vital-num">142 <small>mg/dL</small></div>
+              <div class="app-vital-trend trend-up">↑ +8%</div>
+            </div>
+            <div class="app-vital">
+              <div class="app-vital-lbl">Heart Rate</div>
+              <div class="app-vital-num">72 <small>bpm</small></div>
+              <div class="app-vital-trend trend-ok">↓ Normal</div>
+            </div>
+            <div class="app-vital">
+              <div class="app-vital-lbl">SpO2</div>
+              <div class="app-vital-num">98 <small>%</small></div>
+              <div class="app-vital-trend trend-ok">● Optimal</div>
+            </div>
+            <div class="app-vital">
+              <div class="app-vital-lbl">Blood Pressure</div>
+              <div class="app-vital-num" style="font-size:14px">128/84</div>
+              <div class="app-vital-trend trend-up">↑ mmHg</div>
+            </div>
+          </div>
+          <div class="app-section-lbl">Medications</div>
+          <div class="app-med">
+            <div>
+              <div class="app-med-name">Metformin 500mg</div>
+              <div class="app-med-time">8:00 AM · Dr. S. Reddy</div>
+            </div>
+            <span class="app-med-badge med-taken">✓ Taken</span>
+          </div>
+          <div class="app-med">
+            <div>
+              <div class="app-med-name">Ecosprin 75mg</div>
+              <div class="app-med-time">9:00 AM · Dr. R. Kapoor</div>
+            </div>
+            <span class="app-med-badge med-missed">Missed</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="float-card fc-med-card">
+        <div class="fc-med-row">
+          <div>
+            <div class="fc-med-name">Metformin 500mg</div>
+            <div class="fc-med-time">8:00 AM · Dr. S. Reddy</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;">
+          <span class="fc-taken-badge">✓ Taken on time</span>
+        </div>
+      </div>
+
+      <div class="float-card fc-streak">
+        <div class="fc-streak-num">15</div>
+        <div class="fc-streak-sub">day streak 🔥</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+    <span class="scroll-label">Scroll</span>
+  </div>
+</section>
+
+<!-- ══ PROBLEM ════════════════════════════════════════════════════════ -->
+<section class="problem" id="problem">
+  <div class="fade-up">
+    <span class="section-tag">The Problem</span>
+    <h2 class="section-title">Why Indian institutions <em>can't use</em> frontier AI today</h2>
+    <p class="section-sub">Three structural failures prevent India from accessing the AI it needs — and they compound each other.</p>
+  </div>
+  <div class="problem-grid fade-up">
+    <div class="problem-card">
+      <div class="problem-num">01</div>
+      <h3>The Cost Trap</h3>
+      <p>A mid-size Indian hospital pays $2–5M per year to American corporations. US firms offer 90% cloud credit subsidies — not as philanthropy, but as infrastructure capture. When subsidies end, the dependency will remain.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-num">02</div>
+      <h3>The Sovereignty Wall</h3>
+      <p>Indian defence and strategic institutions are legally prohibited from transmitting sensitive data to foreign servers. GPT-4 is unavailable by protocol. DeepSeek is Chinese. There is no compliant, competent AI alternative for classified environments.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-num">03</div>
+      <h3>The Architecture Lock</h3>
+      <p>Every production AI model uses O(N²) attention. As context doubles, compute quadruples. At 1M tokens: 10¹² operations per layer. Quantisation, caching, and distillation are band-aids — none change the mathematical complexity class.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ QUOTE ══════════════════════════════════════════════════════════ -->
+<div class="quote-band fade-up">
+  <blockquote>
+    "We cannot build an intelligent India on infrastructure we do not own."
+    <cite>— KINSU AI LABS founding thesis</cite>
+  </blockquote>
+</div>
+
+<!-- ══ SPARROW ════════════════════════════════════════════════════════ -->
+<section class="sparrow" id="sparrow">
+  <div class="sparrow-layout">
+    <div class="fade-up">
+      <span class="section-tag">Sparrow — The Technology</span>
+      <h2 class="section-title">A different<br><em>mathematical class</em><br>of AI model</h2>
+      <div class="divider"></div>
+      <p style="font-size:15px;color:var(--text-muted);line-height:1.8;font-weight:300;margin-bottom:36px;">
+        Sparrow replaces the transformer's key-value cache with an O(1) constant-memory mechanism — the first working implementation of this kind, clinically validated on Indian medical data, deployable on a hospital server without cloud or GPU infrastructure.
+      </p>
+      <div class="sparrow-badges">
+        <span class="badge">O(1) Memory</span>
+        <span class="badge">44–46 tok/s on M4 Pro</span>
+        <span class="badge">No GPU required</span>
+        <span class="badge">5 Indian languages</span>
+        <span class="badge">On-premise ready</span>
+        <span class="badge">154M parameters</span>
+      </div>
+      <div class="sparrow-metrics">
+        <div class="metric-row"><span class="metric-label">Training cost</span><span class="metric-val teal">~$50K</span></div>
+        <div class="metric-row"><span class="metric-label">BioMedLM 2.7B training cost</span><span class="metric-val">$10M+</span></div>
+        <div class="metric-row"><span class="metric-label">Hindi token fertility (standard)</span><span class="metric-val">4.93 tokens/char</span></div>
+        <div class="metric-row"><span class="metric-label">Hindi token fertility (Sparrow)</span><span class="metric-val teal">1.49 tokens/char (−69.8%)</span></div>
+        <div class="metric-row"><span class="metric-label">Bits-per-byte vs GPT-2 (1.33)</span><span class="metric-val teal">1.038 (more efficient)</span></div>
+        <div class="metric-row"><span class="metric-label">Ablation (novel component disabled)</span><span class="metric-val">9.32 → 860.92 perplexity (92×)</span></div>
+      </div>
+    </div>
+    <div class="fade-up">
+      <div class="benchmark-card">
+        <h4>MedMCQA Hepatology Benchmark</h4>
+        <div class="bench-row"><div class="bench-row-label"><span>Random baseline</span><span>25.0%</span></div><div class="bar-track"><div class="bar-fill bar-dim" style="width:25%"></div></div></div>
+        <div class="bench-row"><div class="bench-row-label"><span>GPT-2 124M (general)</span><span>~27%</span></div><div class="bar-track"><div class="bar-fill bar-dim" style="width:27%"></div></div></div>
+        <div class="bench-row"><div class="bench-row-label"><span>Sparrow 154M — Hepatology</span><span>31.4%</span></div><div class="bar-track"><div class="bar-fill bar-teal" style="width:31.4%"></div></div></div>
+        <div class="bench-row"><div class="bench-row-label"><span>Sparrow — Pharmacology</span><span class="accent">57%</span></div><div class="bar-track"><div class="bar-fill bar-teal" style="width:57%"></div></div></div>
+        <div class="bench-row" style="margin-bottom:0"><div class="bench-row-label"><span>BioMedLM 2.7B (17× parameters)</span><span>~57%</span></div><div class="bar-track"><div class="bar-fill bar-dim" style="width:57%"></div></div></div>
+        <div class="score-big">
+          <div class="score-num">89.9</div>
+          <div class="score-label">Composite score / 100 · 30 clinician-written questions · 30/30 pass rate</div>
+        </div>
+        <div class="score-sub-grid">
+          <div class="score-sub-cell"><div class="score-sub-val">5.0<small>/5</small></div><div class="score-sub-lbl">Fluency</div></div>
+          <div class="score-sub-cell"><div class="score-sub-val">4.9<small>/5</small></div><div class="score-sub-lbl">Structure</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ APP ════════════════════════════════════════════════════════════ -->
+<section class="app-section" id="app">
+  <div class="app-layout">
+    <div class="app-phones fade-up">
+
+      <!-- Main phone -->
+      <div class="phone-wrap main">
+        <div class="phone-island"></div>
+        <div class="phone-screen">
+          <div class="psc-bar">
+            <span class="psc-time">9:41</span>
+            <span class="psc-icons">● ● ▮</span>
+          </div>
+          <div class="psc-top">
+            <div>
+              <div class="psc-greeting">Good morning</div>
+              <div class="psc-name">Vyom ✨</div>
+            </div>
+            <div class="psc-streak">🔥 15</div>
+          </div>
+          <div class="psc-alert">
+            <div class="psc-alert-icon">✦</div>
+            <div>
+              <div class="psc-alert-title">AI Health Alert</div>
+              <div class="psc-alert-body">Blood sugar above 140 mg/dL this week.</div>
+            </div>
+          </div>
+          <div class="psc-lbl">Today's Medicines</div>
+          <div class="psc-med">
+            <div>
+              <div class="psc-med-name">Metformin 500mg</div>
+              <div class="psc-med-time">8:00 AM · Dr. S. Reddy</div>
+            </div>
+            <span class="psc-med-badge" style="background:rgba(10,160,104,0.1);color:#0AA068;">✓ Taken</span>
+          </div>
+          <div class="psc-med">
+            <div>
+              <div class="psc-med-name">Ecosprin 75mg</div>
+              <div class="psc-med-time">9:00 AM · Dr. R. Kapoor</div>
+            </div>
+            <span class="psc-med-badge" style="background:rgba(232,68,10,0.1);color:#E8440A;">Missed</span>
+          </div>
+          <div class="psc-lbl" style="margin-top:4px;">Vitals Today</div>
+          <div class="psc-vitals">
+            <div class="psc-vital">
+              <div class="psc-vital-lbl">Blood Sugar</div>
+              <div class="psc-vital-num">142 <small>mg/dL</small></div>
+              <div class="psc-vital-trend trend-up">↑ +8%</div>
+            </div>
+            <div class="psc-vital">
+              <div class="psc-vital-lbl">Heart Rate</div>
+              <div class="psc-vital-num">72 <small>bpm</small></div>
+              <div class="psc-vital-trend trend-ok">↓ Normal</div>
+            </div>
+            <div class="psc-vital">
+              <div class="psc-vital-lbl">SpO2</div>
+              <div class="psc-vital-num">98 <small>%</small></div>
+              <div class="psc-vital-trend trend-ok">● Optimal</div>
+            </div>
+            <div class="psc-vital">
+              <div class="psc-vital-lbl">Blood Pressure</div>
+              <div class="psc-vital-num" style="font-size:13px">128/84</div>
+              <div class="psc-vital-trend trend-up">↑ mmHg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Back phone: trends -->
+      <div class="phone-wrap back">
+        <div class="phone-island"></div>
+        <div class="phone-screen">
+          <div class="psc-bar">
+            <span class="psc-time">9:41</span>
+            <span class="psc-icons">● ● ▮</span>
+          </div>
+          <div class="psc-chart-wrap">
+            <div class="psc-chart-title">Vitals Trends</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+              <div class="psc-chart-card">
+                <div class="psc-chart-lbl">Heart Rate</div>
+                <div class="psc-chart-val">72 <small style="font-size:10px;color:#999;font-weight:400;">bpm</small></div>
+                <div class="psc-chart-sub">● Normal</div>
+              </div>
+              <div class="psc-chart-card">
+                <div class="psc-chart-lbl">SpO2</div>
+                <div class="psc-chart-val">98 <small style="font-size:10px;color:#999;font-weight:400;">%</small></div>
+                <div class="psc-chart-sub">● Optimal</div>
+              </div>
+            </div>
+            <div class="psc-trend-wrap">
+              <div class="psc-trend-lbl">Blood Pressure (7 days)</div>
+              <svg viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:44px;">
+                <defs>
+                  <linearGradient id="tealGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#0F9A96"/>
+                    <stop offset="100%" stop-color="#2DD4BF"/>
+                  </linearGradient>
+                </defs>
+                <polyline points="10,32 30,26 50,30 70,20 90,23 110,18 130,16 150,20" fill="none" stroke="url(#tealGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="150" cy="20" r="3.5" fill="#0F9A96"/>
+                <circle cx="150" cy="20" r="6" fill="rgba(15,154,150,0.2)"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up">
+      <span class="section-tag">KINSU Health App</span>
+      <h2 class="section-title">Your health memory,<br>always <em>with you</em></h2>
+      <div class="divider"></div>
+      <p style="font-size:15px;color:var(--text-muted);line-height:1.8;font-weight:300;margin-bottom:48px;">Built on Sparrow's sovereign AI engine, the KINSU app gives patients and families a continuous health companion — in their language, on their device, with their data staying in India.</p>
+      <div class="app-features">
+        <div class="app-feature"><div class="app-feature-icon">💊</div><div><h4>Medication &amp; appointment tracking</h4><p>Smart reminders, missed dose alerts, and upcoming doctor visit management for the whole family.</p></div></div>
+        <div class="app-feature"><div class="app-feature-icon">📈</div><div><h4>Longitudinal vitals &amp; health journeys</h4><p>Daily tracking of blood sugar, blood pressure, heart rate, and chronic symptoms — the kind of longitudinal data hospitals never capture.</p></div></div>
+        <div class="app-feature"><div class="app-feature-icon">🤝</div><div><h4>AI health insights</h4><p>Powered by Sparrow — clinical-grade insights in Hindi and four other Indian languages, without sending data to any foreign server.</p></div></div>
+        <div class="app-feature"><div class="app-feature-icon">🔒</div><div><h4>Your data never leaves India</h4><p>On-device AI inference and India-hosted cloud. Full data sovereignty — because your health story is yours.</p></div></div>
+      </div>
+      <div style="margin-top:44px;display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="#contact" class="btn-primary">Join the waitlist</a>
+        <a href="#contact" class="btn-secondary">For hospitals →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RESEARCH JOURNEY ═══════════════════════════════════════════════ -->
+<section class="journey" id="research">
+  <div class="fade-up">
+    <span class="section-tag">The Research Journey</span>
+    <h2 class="section-title" style="max-width:520px;">Four stages. Each proving the next.</h2>
+    <p class="section-sub">Understanding before innovating — every stage produced a concrete empirical finding that justified the next.</p>
+  </div>
+  <div class="timeline fade-up">
+    <div class="timeline-step">
+      <div class="tl-num">01</div>
+      <div class="tl-title">MicroGPT</div>
+      <div class="tl-body">Built a transformer from scratch to isolate the KV-cache as the load-bearing constraint. Confirmed: any replacement must eliminate linear memory growth entirely.</div>
+    </div>
+    <div class="timeline-step">
+      <div class="tl-num">02</div>
+      <div class="tl-title">Novel Architecture</div>
+      <div class="tl-body">First working pre-trained hybrid combining two published mechanisms on 16.3B tokens. Ablation: perplexity 9.32 → 860.92 when novel component disabled (92× collapse).</div>
+    </div>
+    <div class="timeline-step">
+      <div class="tl-num">03</div>
+      <div class="tl-title">Clinical Validation</div>
+      <div class="tl-body">4-stage SFT + DPO alignment on 54,309 curated hepatology QA pairs. Composite score 89.9/100. Pharmacology accuracy matches BioMedLM 2.7B at 1/17th parameters.</div>
+    </div>
+    <div class="timeline-step">
+      <div class="tl-num">04</div>
+      <div class="tl-title">Sovereign Tokenizer v1.1</div>
+      <div class="tl-body">Two-phase BPE · 64K vocabulary · 175 force-injected clinical terms. Hindi: 4.93 → 1.49. Tamil: 14.63 → 2.40. Bengali: 9.33 → 2.25. Overall: 65.8% reduction.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHY NOW ════════════════════════════════════════════════════════ -->
+<section class="why-now">
+  <div class="fade-up">
+    <span class="section-tag">Why Now</span>
+    <h2 class="section-title" style="max-width:480px;margin-bottom:48px;">The window is <em>open.</em><br>It won't stay open.</h2>
+  </div>
+  <div class="why-grid fade-up">
+    <div class="why-card">
+      <h3>The technical window</h3>
+      <p>Two years ago, pre-training a competitive language model required proprietary datasets accessible only to the largest labs. Today, <strong>FineWeb, DCLM, Sangraha, and AI4Bharat</strong> datasets are public.</p>
+      <p>The IndiaAI Mission has committed <strong>₹10,372 crore to GPU infrastructure</strong>. The compute is coming. The models to run on it need to be Indian.</p>
+      <p>The window to build sovereign AI infrastructure is open right now — and <strong>it closes every quarter that Indian institutions deepen dependency on rented foundations.</strong></p>
+    </div>
+    <div class="why-card">
+      <h3>The personal reason</h3>
+      <p>We watched Western AI labs <strong>deny API access to Indian research institutions</strong> on export control grounds. We watched defence establishments turn away from AI because no compliant option existed.</p>
+      <p>One of our founders navigated a <strong>family member's liver cirrhosis diagnosis</strong> with no accessible specialist, no AI that spoke the right language, no model trained on Indian patient populations. That is the foundation of KINSU.</p>
+      <p>We could not wait for someone else to build this.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TEAM ═══════════════════════════════════════════════════════════ -->
+<section class="team" id="team">
+  <div class="fade-up">
+    <span class="section-tag">The Team</span>
+    <h2 class="section-title" style="margin-bottom:48px;">Built by people who <em>need</em> this to exist</h2>
+  </div>
+  <div class="team-grid fade-up">
+    <div class="team-card">
+      <div class="team-avatar">VS</div>
+      <h3>Vyom Sharma</h3>
+      <div class="team-role">CEO &amp; Co-founder</div>
+      <p class="team-bio">IISc Bangalore graduate and innovation expert. Proven in creating solutions for complex ecosystems and leading cross-functional teams building at the intersection of research and product.</p>
+      <div class="team-tags">
+        <span class="team-tag">IISc Bangalore</span>
+        <span class="team-tag">Complex systems</span>
+        <span class="team-tag">Product strategy</span>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">AS</div>
+      <h3>Aman Singhal</h3>
+      <div class="team-role">COO &amp; Co-founder</div>
+      <p class="team-bio">Cross-domain builder spanning MedTech, Robotics, and EV systems. Trained at AIIMS–Stanford Biodesign in clinical need discovery. Drives product, execution, and real-world deployment at scale.</p>
+      <div class="team-tags">
+        <span class="team-tag">AIIMS–Stanford Biodesign</span>
+        <span class="team-tag">MedTech</span>
+        <span class="team-tag">Clinical need discovery</span>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">DS</div>
+      <h3>Deovrat Singh</h3>
+      <div class="team-role">CTO &amp; Co-founder</div>
+      <p class="team-bio">Expert in scaling applications to enterprise scale, with hands-on experience with the latest technological advancements in AI infrastructure, distributed systems, and deployment pipelines.</p>
+      <div class="team-tags">
+        <span class="team-tag">Enterprise scale</span>
+        <span class="team-tag">AI infrastructure</span>
+        <span class="team-tag">Systems architecture</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MARKET ══════════════════════════════════════════════════════════ -->
+<section class="market">
+  <div class="fade-up">
+    <span class="section-tag">Market Opportunity</span>
+    <h2 class="section-title" style="margin-bottom:48px;">The opportunity is <em>enormous</em></h2>
+  </div>
+  <div class="market-grid fade-up">
+    <div class="market-card">
+      <div class="market-num">$8.6B</div>
+      <div class="market-label">India Healthcare AI</div>
+      <div class="market-sub">Market size by 2025, growing 40% YoY</div>
+    </div>
+    <div class="market-card">
+      <div class="market-num">$220B</div>
+      <div class="market-label">Total Addressable Market</div>
+      <div class="market-sub">Enterprise AI infrastructure globally</div>
+    </div>
+    <div class="market-card">
+      <div class="market-num">$180B</div>
+      <div class="market-label">Serviceable Market</div>
+      <div class="market-sub">Emerging market &amp; domain-specialist AI</div>
+    </div>
+    <div class="market-card">
+      <div class="market-num">$2.5B</div>
+      <div class="market-label">Year 3 SOM</div>
+      <div class="market-sub">Medical AI + India enterprise target</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ════════════════════════════════════════════════════════ -->
+<section class="contact-section" id="contact">
+  <div class="contact-layout">
+    <div class="contact-info fade-up">
+      <div class="contact-info-header">
+        <span class="section-tag">Partner with KINSU AI LABS</span>
+        <h2>Ready to build<br><em>sovereign</em> AI together?</h2>
+        <p style="margin-top:16px;">Whether you are a hospital, a research institution, a government body, a cloud partner, or an investor — we want to hear from you.</p>
+      </div>
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="contact-card-icon">✉️</div>
+          <div>
+            <div class="contact-card-label">Email</div>
+            <div class="contact-card-val"><a href="mailto:Founders@kinsu.health">Founders@kinsu.health</a></div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📞</div>
+          <div>
+            <div class="contact-card-label">Phone</div>
+            <div class="contact-card-val">+91 86993 82384</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📍</div>
+          <div>
+            <div class="contact-card-label">Location</div>
+            <div class="contact-card-val">India</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="partner-types-label">We work with</p>
+        <div class="partner-types">
+          <div class="partner-type"><span class="partner-type-dot"></span>Hospitals &amp; health systems</div>
+          <div class="partner-type"><span class="partner-type-dot"></span>Research institutions &amp; universities</div>
+          <div class="partner-type"><span class="partner-type-dot"></span>Government &amp; defence bodies</div>
+          <div class="partner-type"><span class="partner-type-dot"></span>Cloud &amp; technology partners</div>
+          <div class="partner-type"><span class="partner-type-dot"></span>Investors &amp; strategic partners</div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form fade-up">
+      <h3>Send us a message</h3>
+      <p>We respond within 24 hours.</p>
+      <form action="https://formsubmit.co/Founders@kinsu.health" method="POST">
+        <input type="text" name="_honey" style="display:none">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://kinsu.health/#contact">
+        <input type="hidden" name="_subject" value="New enquiry from kinsu.health">
+        <div class="form-2col">
+          <div class="form-row"><label>Name</label><input type="text" name="name" placeholder="Your name" required></div>
+          <div class="form-row"><label>Organisation</label><input type="text" name="organisation" placeholder="Hospital / Institute / Company"></div>
+        </div>
+        <div class="form-row"><label>Email</label><input type="email" name="email" placeholder="you@organisation.com" required></div>
+        <div class="form-row">
+          <label>I am a</label>
+          <select name="partner_type">
+            <option value="" disabled selected>Select category</option>
+            <option>Hospital / Health system</option>
+            <option>Research institution</option>
+            <option>Government / Defence body</option>
+            <option>Cloud / Technology partner</option>
+            <option>Investor</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row"><label>Message</label><textarea name="message" placeholder="Tell us about your use case, institution, or how you'd like to collaborate…" required></textarea></div>
+        <button type="submit" class="form-submit">Send Message →</button>
+        <p class="form-note">Your details are used solely to respond to your enquiry.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">
+    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="var(--teal)" style="width:22px;height:22px;vertical-align:middle;margin-right:7px;">
+      <g transform="translate(16,16)">
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(0)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(51.43)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(102.86)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(154.29)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(205.71)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(257.14)"/>
+        <rect x="-3.6" y="-13.5" width="7.2" height="9.5" rx="3.6" transform="rotate(308.57)"/>
+      </g>
+    </svg>KINSU <span>AI LABS</span>
+  </div>
+  <div class="footer-links">
+    <a href="#sparrow">Sparrow</a>
+    <a href="#app">Health App</a>
+    <a href="#research">Research</a>
+    <a href="#team">Team</a>
+    <a href="mailto:Founders@kinsu.health">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 KINSU AI LABS · Frontier AI Research. Indian by Design.</div>
+</footer>
+
+<script>
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+function closeMenu() {
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+document.addEventListener('click', (e) => {
+  if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a:not(.nav-pill)');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(sec => { if (window.scrollY >= sec.offsetTop - 100) current = sec.id; });
+  navLinks.forEach(link => {
+    link.style.color = link.getAttribute('href') === '#' + current ? 'rgba(255,255,255,0.9)' : '';
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
