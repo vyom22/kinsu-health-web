@@ -162,7 +162,7 @@ GitHub Pages rebuilds automatically within ~60 seconds.
 - Do not delete `CNAME` — breaks the custom domain.
 - Do not add a build system or bundler — this site is intentionally zero-dependency.
 - Do not change the favicon path without updating the `<link rel="icon">` tag across every HTML file.
-- Do not expose the internal model codename ("TTT-RetNet") anywhere on the site. Public name is **Sparrow**.
+- Do not expose internal model codenames anywhere on the site. Public name is **Sparrow**.
 - Do not add third-party trackers or cookies. Analytics, if any, must be cookieless (e.g., Plausible).
 - Do not embed real patient/family photos in Phase 1. Illustrations and CSS/SVG placeholders only.
 - Do not publish claims that imply Kinsu diagnoses, prescribes, or replaces a clinician. AI outputs are informational.
